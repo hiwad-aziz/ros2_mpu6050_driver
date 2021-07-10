@@ -8,28 +8,30 @@ class MPU6050Sensor {
   MPU6050Sensor(int bus_number = 1);
   ~MPU6050Sensor();
 
-  enum AccelRange { ACC_2_G = 0b00, ACC_4_G = 0b01, ACC_8_G = 0b10, ACC_16_G = 0b11 };
+  enum AccelRange { ACC_2_G, ACC_4_G, ACC_8_G, ACC_16_G };
   enum GyroRange { GYR_250_DEG_S, GYR_500_DEG_S, GYR_1000_DEG_S, GYR_2000_DEG_S };
 
   void printConfig();
   void setGyroscopeRange(GyroRange range);
   void setAccelerometerRange(AccelRange range);
-  void getAccelerations();
-  void getAngularVelocities();
+  double getAccelerationX();
+  double getAccelerationY();
+  double getAccelerationZ();
+  double getAngularVelocityX();
+  double getAngularVelocityY();
+  double getAngularVelocityZ();
   void setGyroscopeOffset();
   void setAccelerometerOffset();
-  void wakeUp();
-  void sleep();
 
  private:
-  void readRawAccelerometerData();
-  void readRawGyroscopeData();
-  void convertRawGyroscopeDate();
-  void convertRawAccelerometerData();
+  double convertRawGyroscopeData(int gyro_raw_);
+  double convertRawAccelerometerData(int accel_raw_);
   void reportError(int error);
 
   int file_;
   char filename_[10] = "/dev/i2c-";
+  int accel_range_{2};
+  int gyro_range_{250};
 
   // MPU6050 registers and addresses (s. datasheet for details)
   static constexpr int MPU6050_ADDRESS_DEFAULT = 0x68;
@@ -45,11 +47,9 @@ class MPU6050Sensor {
   // Helper constants
   static constexpr int GYRO_CONFIG_SHIFT = 3;
   static constexpr int ACCEL_CONFIG_SHIFT = 3;
-
-  // To check
-  static constexpr int SMPLRT_DIV = 0x19;
-  static constexpr int CONFIG = 0x1A;
-  static constexpr int INT_ENABLE = 0x38;
+  static constexpr int ACCEL_SENSITIVITY = 32768;
+  static constexpr int GYRO_SENSITIVITY = 131;
+  static constexpr double GRAVITY = 9.81;
 };
 
 #endif  // MPU6050SENSOR_H
