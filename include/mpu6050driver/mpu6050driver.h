@@ -11,4 +11,5 @@ class MPU6050Driver : public rclcpp::Node {
   std::unique_ptr<MPU6050Sensor> mpu6050_;
   void handleInput();
   size_t count_;
+  rclcpp::TimerBase::SharedPtr timer_;
 };
