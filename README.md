@@ -7,6 +7,7 @@ This repository contains a ROS2 package that interfaces with an MPU6050 sensor o
 
 ## Setup
 The number of iterations for calibration can be set up in `include/mpu6050driver/mpu6050sensor.h`.
+Other parameters can be changed in `params/mpu6050.yaml`.
 
 Build the package in your workspace:
 
