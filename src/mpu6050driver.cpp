@@ -8,12 +8,18 @@ using namespace std::chrono_literals;
 MPU6050Driver::MPU6050Driver()
     : Node("mpu6050publisher"), mpu6050_{std::make_unique<MPU6050Sensor>()}
 {
+  this->declare_parameter<bool>("calibrate", true);
   publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
   mpu6050_->printConfig();
   mpu6050_->setGyroscopeRange(MPU6050Sensor::GyroRange::GYR_250_DEG_S);
   mpu6050_->setAccelerometerRange(MPU6050Sensor::AccelRange::ACC_2_G);
-  mpu6050_->calibrate();
-  mpu6050_->printOffsets();
+  // Check if we want to calibrate the sensor
+  bool calibrate = true;
+  this->get_parameter("calibrate", calibrate);
+  if (calibrate) {
+    mpu6050_->calibrate();
+    mpu6050_->printOffsets();
+  }
   timer_ = this->create_wall_timer(100ms, std::bind(&MPU6050Driver::handleInput, this));
 }
 
