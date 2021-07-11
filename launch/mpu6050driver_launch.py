@@ -1,9 +1,21 @@
+from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
+
+import os
 
 
 def generate_launch_description():
     ld = LaunchDescription()
+    share_dir = get_package_share_directory('mpu6050driver')
+    parameter_file = LaunchConfiguration('params_file')
+
+    params_declare = DeclareLaunchArgument('params_file',
+                                           default_value=os.path.join(
+                                               share_dir, 'params', 'mpu6050.yaml'),
+                                           description='Path to the ROS2 parameters file to use.')
 
     mpu6050driver_node = Node(
         package='mpu6050driver',
@@ -11,21 +23,9 @@ def generate_launch_description():
         name='mpu6050driver_node',
         output="screen",
         emulate_tty=True,
-        parameters=[
-                {"calibrate": True},
-                # Gyroscope range: 0 -> +-250°/s, 1 -> +-500°/s, 2 -> +-1000°/s, 3 -> +-2000°/s
-                {"gyro_range": 0},
-                # Acceleration range: 0 -> +-2g, 1 -> +-4g, 2 -> +-8g, 3 -> +-16g
-                {"accel_range": 0},
-                # If "calibrate" is true, these values will be overriden by the calibration procedure
-                {"gyro_x_offset": 0.0},   # [deg/s]
-                {"gyro_y_offset": 0.0},   # [deg/s]
-                {"gyro_z_offset": 0.0},   # [deg/s]
-                {"accel_x_offset": 0.0},  # [m/s²]
-                {"accel_y_offset": 0.0},  # [m/s²]
-                {"accel_z_offset": 0.0}   # [m/s²]
-        ]
+        parameters=[parameter_file]
     )
 
+    ld.add_action(params_declare)
     ld.add_action(mpu6050driver_node)
     return ld
