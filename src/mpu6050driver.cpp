@@ -8,18 +8,35 @@ using namespace std::chrono_literals;
 MPU6050Driver::MPU6050Driver()
     : Node("mpu6050publisher"), mpu6050_{std::make_unique<MPU6050Sensor>()}
 {
+  // Declare parameters
   this->declare_parameter<bool>("calibrate", true);
-  publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
-  mpu6050_->printConfig();
-  mpu6050_->setGyroscopeRange(MPU6050Sensor::GyroRange::GYR_250_DEG_S);
-  mpu6050_->setAccelerometerRange(MPU6050Sensor::AccelRange::ACC_2_G);
+  this->declare_parameter<int>("gyro_range", MPU6050Sensor::GyroRange::GYR_250_DEG_S);
+  this->declare_parameter<int>("accel_range", MPU6050Sensor::AccelRange::ACC_2_G);
+  this->declare_parameter<double>("gyro_x_offset", 0.0);
+  this->declare_parameter<double>("gyro_y_offset", 0.0);
+  this->declare_parameter<double>("gyro_z_offset", 0.0);
+  this->declare_parameter<double>("accel_x_offset", 0.0);
+  this->declare_parameter<double>("accel_y_offset", 0.0);
+  this->declare_parameter<double>("accel_z_offset", 0.0);
+  // Set parameters
+  mpu6050_->setGyroscopeRange(
+      static_cast<MPU6050Sensor::GyroRange>(this->get_parameter("gyro_range").as_int()));
+  mpu6050_->setAccelerometerRange(
+      static_cast<MPU6050Sensor::AccelRange>(this->get_parameter("accel_range").as_int()));
+  mpu6050_->setGyroscopeOffset(this->get_parameter("gyro_x_offset").as_double(),
+                               this->get_parameter("gyro_y_offset").as_double(),
+                               this->get_parameter("gyro_z_offset").as_double());
+  mpu6050_->setAccelerometerOffset(this->get_parameter("accel_x_offset").as_double(),
+                                   this->get_parameter("accel_y_offset").as_double(),
+                                   this->get_parameter("accel_z_offset").as_double());
   // Check if we want to calibrate the sensor
-  bool calibrate = true;
-  this->get_parameter("calibrate", calibrate);
-  if (calibrate) {
+  if (this->get_parameter("calibrate").as_bool()) {
     mpu6050_->calibrate();
-    mpu6050_->printOffsets();
   }
+  mpu6050_->printConfig();
+  mpu6050_->printOffsets();
+  // Create publisher
+  publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
   timer_ = this->create_wall_timer(100ms, std::bind(&MPU6050Driver::handleInput, this));
 }
 

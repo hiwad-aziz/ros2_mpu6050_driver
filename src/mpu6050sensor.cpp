@@ -200,9 +200,21 @@ double MPU6050Sensor::convertRawAccelerometerData(int accel_raw) const
   return accel_in_m_per_s;
 }
 
-void MPU6050Sensor::setGyroscopeOffset() {}
+void MPU6050Sensor::setGyroscopeOffset(double gyro_x_offset, double gyro_y_offset,
+                                       double gyro_z_offset)
+{
+  gyro_x_offset_ = gyro_x_offset;
+  gyro_y_offset_ = gyro_y_offset;
+  gyro_z_offset_ = gyro_z_offset;
+}
 
-void MPU6050Sensor::setAccelerometerOffset() {}
+void MPU6050Sensor::setAccelerometerOffset(double accel_x_offset, double accel_y_offset,
+                                           double accel_z_offset)
+{
+  accel_x_offset_ = accel_x_offset;
+  accel_y_offset_ = accel_y_offset;
+  accel_z_offset_ = accel_z_offset;
+}
 
 void MPU6050Sensor::calibrate()
 {
