@@ -1,3 +1,6 @@
+#ifndef MPU6050DRIVER_H
+#define MPU6050DRIVER_H
+
 #include "mpu6050driver/mpu6050sensor.h"
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/imu.hpp"
@@ -13,3 +16,5 @@ class MPU6050Driver : public rclcpp::Node {
   size_t count_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
+
+#endif  // MPU6050DRIVER_H
