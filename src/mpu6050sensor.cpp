@@ -33,6 +33,7 @@ MPU6050Sensor::MPU6050Sensor(int bus_number)
   // Read current ranges from sensor
   readGyroscopeRange();
   readAccelerometerRange();
+  readDlpfConfig();
 }
 
 MPU6050Sensor::~MPU6050Sensor() { close(file_); }
@@ -41,6 +42,7 @@ void MPU6050Sensor::printConfig() const
 {
   std::cout << "Accelerometer Range: +-" << accel_range_ << "g\n";
   std::cout << "Gyroscope Range: +-" << gyro_range_ << " degree per sec\n";
+  std::cout << "DLPF Range: " << dlpf_range_ << " Hz\n";
 }
 
 void MPU6050Sensor::printOffsets() const
@@ -69,50 +71,34 @@ int MPU6050Sensor::readAccelerometerRange()
   return accel_range_;
 }
 
+int MPU6050Sensor::readDlpfConfig()
+{
+  int range = i2c_smbus_read_byte_data(file_, DLPF_CONFIG);
+  if (range < 0) reportError(errno);
+  range = range & 7;  // Read only first 3 bits
+  dlpf_range_ = DLPF_RANGES[range];
+  return dlpf_range_;
+}
+
 void MPU6050Sensor::setGyroscopeRange(MPU6050Sensor::GyroRange range)
 {
   int result = i2c_smbus_write_byte_data(file_, GYRO_CONFIG, range << GYRO_CONFIG_SHIFT);
   if (result < 0) reportError(errno);
-  switch (range) {
-    case GyroRange::GYR_250_DEG_S:
-      gyro_range_ = 250;
-      break;
-    case GyroRange::GYR_500_DEG_S:
-      gyro_range_ = 500;
-      break;
-    case GyroRange::GYR_1000_DEG_S:
-      gyro_range_ = 1000;
-      break;
-    case GyroRange::GYR_2000_DEG_S:
-      gyro_range_ = 2000;
-      break;
-    default:
-      gyro_range_ = 250;
-      break;
-  }
+  gyro_range_ = GYRO_RANGES[static_cast<size_t>(range)];
 }
 
 void MPU6050Sensor::setAccelerometerRange(MPU6050Sensor::AccelRange range)
 {
   int result = i2c_smbus_write_byte_data(file_, ACCEL_CONFIG, range << ACCEL_CONFIG_SHIFT);
   if (result < 0) reportError(errno);
-  switch (range) {
-    case AccelRange::ACC_2_G:
-      accel_range_ = 2;
-      break;
-    case AccelRange::ACC_4_G:
-      accel_range_ = 4;
-      break;
-    case AccelRange::ACC_8_G:
-      accel_range_ = 8;
-      break;
-    case AccelRange::ACC_16_G:
-      accel_range_ = 16;
-      break;
-    default:
-      accel_range_ = 2;
-      break;
-  }
+  accel_range_ = ACCEL_RANGES[static_cast<size_t>(range)];
+}
+
+void MPU6050Sensor::setDlpfBandwidth(DlpfBandwidth bandwidth)
+{
+  int result = i2c_smbus_write_byte_data(file_, DLPF_CONFIG, bandwidth);
+  if (result < 0) reportError(errno);
+  dlpf_range_ = DLPF_RANGES[static_cast<size_t>(bandwidth)];
 }
 
 double MPU6050Sensor::getAccelerationX() const

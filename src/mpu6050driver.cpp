@@ -12,6 +12,7 @@ MPU6050Driver::MPU6050Driver()
   this->declare_parameter<bool>("calibrate", true);
   this->declare_parameter<int>("gyro_range", MPU6050Sensor::GyroRange::GYR_250_DEG_S);
   this->declare_parameter<int>("accel_range", MPU6050Sensor::AccelRange::ACC_2_G);
+  this->declare_parameter<int>("dlpf_bandwidth", MPU6050Sensor::DlpfBandwidth::DLPF_260_HZ);
   this->declare_parameter<double>("gyro_x_offset", 0.0);
   this->declare_parameter<double>("gyro_y_offset", 0.0);
   this->declare_parameter<double>("gyro_z_offset", 0.0);
@@ -24,6 +25,8 @@ MPU6050Driver::MPU6050Driver()
       static_cast<MPU6050Sensor::GyroRange>(this->get_parameter("gyro_range").as_int()));
   mpu6050_->setAccelerometerRange(
       static_cast<MPU6050Sensor::AccelRange>(this->get_parameter("accel_range").as_int()));
+  mpu6050_->setDlpfBandwidth(
+      static_cast<MPU6050Sensor::DlpfBandwidth>(this->get_parameter("dlpf_bandwidth").as_int()));
   mpu6050_->setGyroscopeOffset(this->get_parameter("gyro_x_offset").as_double(),
                                this->get_parameter("gyro_y_offset").as_double(),
                                this->get_parameter("gyro_z_offset").as_double());
@@ -32,6 +35,7 @@ MPU6050Driver::MPU6050Driver()
                                    this->get_parameter("accel_z_offset").as_double());
   // Check if we want to calibrate the sensor
   if (this->get_parameter("calibrate").as_bool()) {
+    std::cout << "Calibrating...\n";
     mpu6050_->calibrate();
   }
   mpu6050_->printConfig();
