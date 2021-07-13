@@ -18,6 +18,7 @@ MPU6050Driver::MPU6050Driver()
   this->declare_parameter<double>("accel_x_offset", 0.0);
   this->declare_parameter<double>("accel_y_offset", 0.0);
   this->declare_parameter<double>("accel_z_offset", 0.0);
+  this->declare_parameter<int>("frequency", 0.0);
   // Set parameters
   mpu6050_->setGyroscopeRange(
       static_cast<MPU6050Sensor::GyroRange>(this->get_parameter("gyro_range").as_int()));
@@ -37,7 +38,9 @@ MPU6050Driver::MPU6050Driver()
   mpu6050_->printOffsets();
   // Create publisher
   publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
-  timer_ = this->create_wall_timer(100ms, std::bind(&MPU6050Driver::handleInput, this));
+  std::chrono::duration<int64_t, std::milli> frequency =
+      1000ms / this->get_parameter("gyro_range").as_int();
+  timer_ = this->create_wall_timer(frequency, std::bind(&MPU6050Driver::handleInput, this));
 }
 
 void MPU6050Driver::handleInput()

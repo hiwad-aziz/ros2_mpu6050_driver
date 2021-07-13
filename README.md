@@ -1,6 +1,6 @@
 
 # MPU6050 Driver for ROS2
-This repository contains a ROS2 package that interfaces with an MPU6050 sensor over I2C. The sensor is calibrated on node startup (sensor needs to be on a plane with z-axis up and should not be moved during calibration). Calibration can be turned off in the launch file.
+This repository contains a ROS2 package that interfaces with an MPU6050 sensor over I2C. The sensor is calibrated on node startup (sensor needs to be on a plane with z-axis up and should not be moved during calibration). Calibration can be turned off in the parameters file.
 
 ## Dependencies
 -  libi2c-dev
