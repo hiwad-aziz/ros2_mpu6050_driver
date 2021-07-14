@@ -103,9 +103,9 @@ void MPU6050Sensor::setDlpfBandwidth(DlpfBandwidth bandwidth)
 
 double MPU6050Sensor::getAccelerationX() const
 {
-  int accel_x_msb = i2c_smbus_read_byte_data(file_, ACCEL_XOUT_H);
-  int accel_x_lsb = i2c_smbus_read_byte_data(file_, ACCEL_XOUT_H + 1);
-  int accel_x = accel_x_lsb | accel_x_msb << 8;
+  int16_t accel_x_msb = i2c_smbus_read_byte_data(file_, ACCEL_XOUT_H);
+  int16_t accel_x_lsb = i2c_smbus_read_byte_data(file_, ACCEL_XOUT_H + 1);
+  int16_t accel_x = accel_x_lsb | accel_x_msb << 8;
   double accel_x_converted = convertRawAccelerometerData(accel_x);
   if (calibrated_) {
     return accel_x_converted - accel_x_offset_;
@@ -115,9 +115,9 @@ double MPU6050Sensor::getAccelerationX() const
 
 double MPU6050Sensor::getAccelerationY() const
 {
-  int accel_y_msb = i2c_smbus_read_byte_data(file_, ACCEL_YOUT_H);
-  int accel_y_lsb = i2c_smbus_read_byte_data(file_, ACCEL_YOUT_H + 1);
-  int accel_y = accel_y_lsb | accel_y_msb << 8;
+  int16_t accel_y_msb = i2c_smbus_read_byte_data(file_, ACCEL_YOUT_H);
+  int16_t accel_y_lsb = i2c_smbus_read_byte_data(file_, ACCEL_YOUT_H + 1);
+  int16_t accel_y = accel_y_lsb | accel_y_msb << 8;
   double accel_y_converted = convertRawAccelerometerData(accel_y);
   if (calibrated_) {
     return accel_y_converted - accel_y_offset_;
@@ -127,9 +127,9 @@ double MPU6050Sensor::getAccelerationY() const
 
 double MPU6050Sensor::getAccelerationZ() const
 {
-  int accel_z_msb = i2c_smbus_read_byte_data(file_, ACCEL_ZOUT_H);
-  int accel_z_lsb = i2c_smbus_read_byte_data(file_, ACCEL_ZOUT_H + 1);
-  int accel_z = accel_z_lsb | accel_z_msb << 8;
+  int16_t accel_z_msb = i2c_smbus_read_byte_data(file_, ACCEL_ZOUT_H);
+  int16_t accel_z_lsb = i2c_smbus_read_byte_data(file_, ACCEL_ZOUT_H + 1);
+  int16_t accel_z = accel_z_lsb | accel_z_msb << 8;
   double accel_z_converted = convertRawAccelerometerData(accel_z);
   if (calibrated_) {
     return accel_z_converted - accel_z_offset_;
@@ -139,9 +139,9 @@ double MPU6050Sensor::getAccelerationZ() const
 
 double MPU6050Sensor::getAngularVelocityX() const
 {
-  int gyro_x_msb = i2c_smbus_read_byte_data(file_, GYRO_XOUT_H);
-  int gyro_x_lsb = i2c_smbus_read_byte_data(file_, GYRO_XOUT_H + 1);
-  int gyro_x = gyro_x_lsb | gyro_x_msb << 8;
+  int16_t gyro_x_msb = i2c_smbus_read_byte_data(file_, GYRO_XOUT_H);
+  int16_t gyro_x_lsb = i2c_smbus_read_byte_data(file_, GYRO_XOUT_H + 1);
+  int16_t gyro_x = gyro_x_lsb | gyro_x_msb << 8;
   double gyro_x_converted = convertRawGyroscopeData(gyro_x);
   if (calibrated_) {
     return gyro_x_converted - gyro_x_offset_;
@@ -151,9 +151,9 @@ double MPU6050Sensor::getAngularVelocityX() const
 
 double MPU6050Sensor::getAngularVelocityY() const
 {
-  int gyro_y_msb = i2c_smbus_read_byte_data(file_, GYRO_YOUT_H);
-  int gyro_y_lsb = i2c_smbus_read_byte_data(file_, GYRO_YOUT_H + 1);
-  int gyro_y = gyro_y_lsb | gyro_y_msb << 8;
+  int16_t gyro_y_msb = i2c_smbus_read_byte_data(file_, GYRO_YOUT_H);
+  int16_t gyro_y_lsb = i2c_smbus_read_byte_data(file_, GYRO_YOUT_H + 1);
+  int16_t gyro_y = gyro_y_lsb | gyro_y_msb << 8;
   double gyro_y_converted = convertRawGyroscopeData(gyro_y);
   if (calibrated_) {
     return gyro_y_converted - gyro_y_offset_;
@@ -163,9 +163,9 @@ double MPU6050Sensor::getAngularVelocityY() const
 
 double MPU6050Sensor::getAngularVelocityZ() const
 {
-  int gyro_z_msb = i2c_smbus_read_byte_data(file_, GYRO_ZOUT_H);
-  int gyro_z_lsb = i2c_smbus_read_byte_data(file_, GYRO_ZOUT_H + 1);
-  int gyro_z = gyro_z_lsb | gyro_z_msb << 8;
+  int16_t gyro_z_msb = i2c_smbus_read_byte_data(file_, GYRO_ZOUT_H);
+  int16_t gyro_z_lsb = i2c_smbus_read_byte_data(file_, GYRO_ZOUT_H + 1);
+  int16_t gyro_z = gyro_z_lsb | gyro_z_msb << 8;
   double gyro_z_converted = convertRawGyroscopeData(gyro_z);
   if (calibrated_) {
     return gyro_z_converted - gyro_z_offset_;
