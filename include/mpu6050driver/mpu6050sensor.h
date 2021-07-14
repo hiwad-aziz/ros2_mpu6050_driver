@@ -37,8 +37,8 @@ class MPU6050Sensor {
   void calibrate();
 
  private:
-  double convertRawGyroscopeData(int gyro_raw_) const;
-  double convertRawAccelerometerData(int accel_raw_) const;
+  double convertRawGyroscopeData(int16_t gyro_raw_) const;
+  double convertRawAccelerometerData(int16_t accel_raw_) const;
   int readGyroscopeRange();
   int readAccelerometerRange();
   int readDlpfConfig();
