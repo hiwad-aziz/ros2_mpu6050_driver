@@ -9,17 +9,7 @@ MPU6050Driver::MPU6050Driver()
     : Node("mpu6050publisher"), mpu6050_{std::make_unique<MPU6050Sensor>()}
 {
   // Declare parameters
-  this->declare_parameter<bool>("calibrate", true);
-  this->declare_parameter<int>("gyro_range", MPU6050Sensor::GyroRange::GYR_250_DEG_S);
-  this->declare_parameter<int>("accel_range", MPU6050Sensor::AccelRange::ACC_2_G);
-  this->declare_parameter<int>("dlpf_bandwidth", MPU6050Sensor::DlpfBandwidth::DLPF_260_HZ);
-  this->declare_parameter<double>("gyro_x_offset", 0.0);
-  this->declare_parameter<double>("gyro_y_offset", 0.0);
-  this->declare_parameter<double>("gyro_z_offset", 0.0);
-  this->declare_parameter<double>("accel_x_offset", 0.0);
-  this->declare_parameter<double>("accel_y_offset", 0.0);
-  this->declare_parameter<double>("accel_z_offset", 0.0);
-  this->declare_parameter<int>("frequency", 0.0);
+  declareParameters();
   // Set parameters
   mpu6050_->setGyroscopeRange(
       static_cast<MPU6050Sensor::GyroRange>(this->get_parameter("gyro_range").as_int()));
@@ -63,6 +53,21 @@ void MPU6050Driver::handleInput()
   message.orientation.z = 0;
   message.orientation.w = 0;
   publisher_->publish(message);
+}
+
+void MPU6050Driver::declareParameters()
+{
+  this->declare_parameter<bool>("calibrate", true);
+  this->declare_parameter<int>("gyro_range", MPU6050Sensor::GyroRange::GYR_250_DEG_S);
+  this->declare_parameter<int>("accel_range", MPU6050Sensor::AccelRange::ACC_2_G);
+  this->declare_parameter<int>("dlpf_bandwidth", MPU6050Sensor::DlpfBandwidth::DLPF_260_HZ);
+  this->declare_parameter<double>("gyro_x_offset", 0.0);
+  this->declare_parameter<double>("gyro_y_offset", 0.0);
+  this->declare_parameter<double>("gyro_z_offset", 0.0);
+  this->declare_parameter<double>("accel_x_offset", 0.0);
+  this->declare_parameter<double>("accel_y_offset", 0.0);
+  this->declare_parameter<double>("accel_z_offset", 0.0);
+  this->declare_parameter<int>("frequency", 0.0);
 }
 
 int main(int argc, char* argv[])
