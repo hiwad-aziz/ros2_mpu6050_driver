@@ -42,12 +42,16 @@ void MPU6050Driver::handleInput()
   auto message = sensor_msgs::msg::Imu();
   message.header.stamp = this->get_clock()->now();
   message.header.frame_id = "base_link";
+  message.linear_acceleration_covariance = {0};
   message.linear_acceleration.x = mpu6050_->getAccelerationX();
   message.linear_acceleration.y = mpu6050_->getAccelerationY();
   message.linear_acceleration.z = mpu6050_->getAccelerationZ();
+  message.angular_velocity_covariance[0] = {0};
   message.angular_velocity.x = mpu6050_->getAngularVelocityX();
   message.angular_velocity.y = mpu6050_->getAngularVelocityY();
   message.angular_velocity.z = mpu6050_->getAngularVelocityZ();
+  // Invalidate quaternion
+  message.orientation_covariance[0] = -1;
   message.orientation.x = 0;
   message.orientation.y = 0;
   message.orientation.z = 0;
