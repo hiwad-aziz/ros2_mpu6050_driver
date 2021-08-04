@@ -25,7 +25,7 @@ MPU6050Driver::MPU6050Driver()
                                    this->get_parameter("accel_z_offset").as_double());
   // Check if we want to calibrate the sensor
   if (this->get_parameter("calibrate").as_bool()) {
-    std::cout << "Calibrating...\n";
+    RCLCPP_INFO(this->get_logger(), "Calibrating...");
     mpu6050_->calibrate();
   }
   mpu6050_->printConfig();
