@@ -41,7 +41,7 @@ void MPU6050Driver::handleInput()
 {
   auto message = sensor_msgs::msg::Imu();
   message.header.stamp = this->get_clock()->now();
-  message.header.frame_id = "base_link";
+  message.header.frame_id = "imu"; //"base_link";
   message.linear_acceleration_covariance = {0};
   message.linear_acceleration.x = mpu6050_->getAccelerationX();
   message.linear_acceleration.y = mpu6050_->getAccelerationY();
