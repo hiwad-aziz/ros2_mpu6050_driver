@@ -28,6 +28,10 @@ Build the package in your workspace:
 Source setup.bash in your workspace:
 
     . install/setup.bash
+
+Grant user access to i2c, need to reboot afterwards:
+
+    sudo usermod <user-name> -aG i2c
     
 Launch it:
 
