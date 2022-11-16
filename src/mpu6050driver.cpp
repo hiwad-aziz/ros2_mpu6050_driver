@@ -33,7 +33,7 @@ MPU6050Driver::MPU6050Driver()
   // Create publisher
   publisher_ = this->create_publisher<sensor_msgs::msg::Imu>("imu", 10);
   std::chrono::duration<int64_t, std::milli> frequency =
-      1000ms / this->get_parameter("gyro_range").as_int();
+      1000ms / this->get_parameter("frequency").as_int();
   timer_ = this->create_wall_timer(frequency, std::bind(&MPU6050Driver::handleInput, this));
 }
 
