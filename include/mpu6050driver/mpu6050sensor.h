@@ -1,6 +1,7 @@
 #ifndef MPU6050SENSOR_H
 #define MPU6050SENSOR_H
 
+#include <array>
 #include <string>
 #include <unordered_map>
 
