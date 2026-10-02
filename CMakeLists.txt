@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 project(mpu6050driver)
 
 # Default to C99
@@ -21,11 +21,16 @@ find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
 add_executable(mpu6050driver src/mpu6050driver.cpp src/mpu6050sensor.cpp)
-ament_target_dependencies(mpu6050driver rclcpp sensor_msgs)
-target_link_libraries(mpu6050driver i2c)
+target_link_libraries(mpu6050driver PRIVATE
+    rclcpp::rclcpp
+    std_msgs::std_msgs
+    sensor_msgs::sensor_msgs
+    i2c
+)
 target_include_directories(
   mpu6050driver PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-                       $<INSTALL_INTERFACE:include>)
+                       $<INSTALL_INTERFACE:include>
+)
 
 install(TARGETS mpu6050driver DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY launch params DESTINATION share/${PROJECT_NAME}/)
